@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-duplicate-props */
-/* eslint-disable react/jsx-no-target-blank */
 import React from "react";
 import "./forkme.scss";
 import { t } from "../../locales/";
