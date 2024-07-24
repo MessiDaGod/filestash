@@ -43,10 +43,11 @@ Input.propTypes = {
 
 
 export const Select = (props) => {
+    console.log("Rendering Select component with props: ", props);
     const choices = props.choices || [];
     const id = props.id ? { id: props.id } : {};
     return (
-        <select className="component_select joe" onChange={props.onChange} {...id}
+        <select className="component_select" onChange={props.onChange} {...id}
             name={props.name} defaultValue={props.value}>
             <option hidden>{ props.placeholder }</option>
             {

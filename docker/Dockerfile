@@ -1,14 +1,14 @@
 # STEP1: CLONE THE CODE
 FROM alpine:latest as builder_prepare
 WORKDIR /home/
-RUN apk add git && \
+RUN apk add --no-cache git && \
     git clone --depth 1 https://github.com/messidagod/filestash
 
 # STEP2: BUILD THE FRONTEND
 FROM node:18-alpine AS builder_frontend
 WORKDIR /home/
 COPY --from=builder_prepare /home/filestash/ ./
-RUN apk add make git gzip brotli && \
+RUN apk add --no-cache make git gzip brotli && \
     npm install --legacy-peer-deps && \
     make build_frontend && \
     cd public && make compress
@@ -18,8 +18,7 @@ FROM golang:1.21-bookworm AS builder_backend
 WORKDIR /home/
 COPY --from=builder_frontend /home/ ./
 RUN apt-get update > /dev/null && \
-    apt-get install -y libvips-dev curl make > /dev/null 2>&1 && \
-    apt-get install -y libjpeg-dev libtiff-dev libpng-dev libwebp-dev libraw-dev libheif-dev libgif-dev && \
+    apt-get install -y libvips-dev curl make libjpeg-dev libtiff-dev libpng-dev libwebp-dev libraw-dev libheif-dev libgif-dev > /dev/null 2>&1 && \
     make build_init && \
     make build_backend && \
     mkdir -p ./dist/data/state/config/ && \
@@ -42,19 +41,7 @@ RUN apt-get update > /dev/null && \
     export CTAN_REPO="http://mirror.las.iastate.edu/tex-archive/systems/texlive/tlnet" && \
     curl -sL "https://yihui.name/gh/tinytex/tools/install-unx.sh" | sh && \
     mv ~/.TinyTeX /usr/share/tinytex && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install wasy && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install ulem && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install marvosym && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install wasysym && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install xcolor && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install listings && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install parskip && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install float && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install wrapfig && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install sectsty && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install capt-of && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install epstopdf-pkg && \
-    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install cm-super && \
+    /usr/share/tinytex/bin/$(uname -m)-linux/tlmgr install wasy ulem marvosym wasysym xcolor listings parskip float wrapfig sectsty capt-of epstopdf-pkg cm-super && \
     ln -s /usr/share/tinytex/bin/$(uname -m)-linux/pdflatex /usr/local/bin/pdflatex && \
     apt-get purge -y --auto-remove perl wget && \
     # Cleanup
