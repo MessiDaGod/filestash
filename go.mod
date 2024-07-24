@@ -109,6 +109,7 @@ require (
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/spacemonkeygo/monkit/v3 v3.0.23 // indirect
 	github.com/src-d/gcfg v1.4.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/wayneashleyberry/terminal-dimensions v1.1.0 // indirect

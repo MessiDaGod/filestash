@@ -2,7 +2,7 @@
 FROM alpine:latest as builder_prepare
 WORKDIR /home/
 RUN apk add git && \
-    git clone --depth 1 https://github.com/mickael-kerjean/filestash
+    git clone --depth 1 https://github.com/messidagod/filestash
 
 # STEP2: BUILD THE FRONTEND
 FROM node:18-alpine AS builder_frontend
@@ -27,7 +27,7 @@ RUN apt-get update > /dev/null && \
 
 # STEP4: Create the prod image from the build
 FROM debian:stable-slim
-MAINTAINER mickael@kerjean.me
+LABEL maintainer="joeshakely@gmail.com"
 COPY --from=builder_backend /home/dist/ /app/
 WORKDIR "/app"
 RUN apt-get update > /dev/null && \
