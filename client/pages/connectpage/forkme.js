@@ -2,7 +2,7 @@ import React from "react";
 import "./forkme.scss";
 import { t } from "../../locales/";
 
-export const ForkMe = ({ repo = "https://github.com/messidagod/filestash" }) => {
+export const ForkMe = ({ repo = "https://github.com/messidagod/nextjs-ts" }) => {
     return (
         <div className="component_forkme">
             <a href={repo} target="_blank" rel="noopener noreferrer" className="github-corner" aria-label="View source on GitHub">
