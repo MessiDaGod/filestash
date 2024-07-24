@@ -43,7 +43,6 @@ Input.propTypes = {
 
 
 export const Select = (props) => {
-    console.log("Rendering Select component with props: ", props);
     const choices = props.choices || [];
     const id = props.id ? { id: props.id } : {};
     return (
