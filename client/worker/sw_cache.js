@@ -1,4 +1,4 @@
-const CACHE_NAME = "v0.3";
+const CACHE_NAME = "v0.4"; // Update this version number with each deployment
 
 /*
  * Control everything going through the wire, applying different
@@ -10,7 +10,7 @@ self.addEventListener("fetch", function(event) {
         message: err.message,
     }), { status: 502 }));
 
-    if (is_a_ressource(event.request)) {
+    if (is_a_resource(event.request)) {
         return event.respondWith(cacheFirstStrategy(event).catch(errResponse));
     } else if (is_an_api_call(event.request)) {
         return event;
@@ -27,6 +27,9 @@ self.addEventListener("fetch", function(event) {
  */
 self.addEventListener("activate", function(event) {
     vacuum(event);
+    if (self.clients && clients.claim) {
+        clients.claim();
+    }
 });
 
 self.addEventListener("error", function(err) {
@@ -37,7 +40,7 @@ self.addEventListener("error", function(err) {
  * When a newly installed service worker is coming in, we want to use it
  * straight away (make it active). By default it would be in a "waiting state"
  */
-self.addEventListener("install", function() {
+self.addEventListener("install", function(event) {
     caches.open(CACHE_NAME).then(function(cache) {
         return cache.addAll([
             "/",
@@ -50,8 +53,7 @@ self.addEventListener("install", function() {
     }
 });
 
-
-function is_a_ressource(request) {
+function is_a_resource(request) {
     const p = _pathname(request);
     if (["assets", "manifest.json", "favicon.ico"].indexOf(p[0]) !== -1) {
         return true;
@@ -64,11 +66,11 @@ function is_a_ressource(request) {
 function is_an_api_call(request) {
     return _pathname(request)[0] === "api" ? true : false;
 }
+
 function is_an_index(request) {
     return ["files", "view", "login", "logout", ""]
-        .indexOf(_pathname(request)[0]) >= 0? true : false;
+        .indexOf(_pathname(request)[0]) >= 0 ? true : false;
 }
-
 
 // //////////////////////////////////////
 // HELPERS
@@ -76,13 +78,15 @@ function is_an_index(request) {
 
 function vacuum(event) {
     return event.waitUntil(
-        caches.keys().then(function(cachesName) {
-            return Promise.all(cachesName.map(function(cacheName) {
-                if (cacheName !== CACHE_NAME) {
-                    return caches.delete(cacheName);
-                }
-            }));
-        }),
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    if (cacheName !== CACHE_NAME) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
     );
 }
 
