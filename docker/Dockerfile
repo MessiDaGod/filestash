@@ -1,5 +1,6 @@
 # STEP1: CLONE THE CODE
 FROM alpine:latest as builder_prepare
+ARG CACHEBUST=1
 WORKDIR /home/
 RUN apk add git && \
     git clone --depth 1 https://github.com/messidagod/filestash
