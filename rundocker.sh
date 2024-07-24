@@ -2,5 +2,5 @@
 
 cd docker
 docker-compose down
-docker-compose build --no-cache
+docker build -t custom_filestash_image . --no-cache
 docker-compose up -d
